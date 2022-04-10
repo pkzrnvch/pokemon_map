@@ -9,5 +9,8 @@ class Pokemon(models.Model):
         return f'{self.title}'
 
 class PokemonEntity(models.Model):
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
     lat = models.FloatField('Широта')
     lon = models.FloatField('Долгота')
+    appeared_at = models.DateTimeField('Время появления', null=True, blank=True)
+    disappeared_at = models.DateTimeField('Время исчезновения', null=True, blank=True)
