@@ -3,6 +3,8 @@ from django.db import models  # noqa F401
 class Pokemon(models.Model):
     """Покемон."""
     title = models.CharField('Название', max_length=200)
+    title_en = models.CharField(blank=True, max_length=200)
+    title_jp = models.CharField(blank=True, max_length=200)
     image = models.ImageField('Картинка', upload_to='pokemon_images', null=True, blank=True)
     description = models.TextField(blank=True)
 
