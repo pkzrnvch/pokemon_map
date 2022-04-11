@@ -4,6 +4,7 @@ class Pokemon(models.Model):
     """Покемон."""
     title = models.CharField('Название', max_length=200)
     image = models.ImageField('Картинка', upload_to='pokemon_images', null=True, blank=True)
+    description = models.TextField(blank=True)
 
     def __str__(self):
         return f'{self.title}'
