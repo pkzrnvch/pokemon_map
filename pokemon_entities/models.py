@@ -7,6 +7,13 @@ class Pokemon(models.Model):
     title_jp = models.CharField(blank=True, max_length=200)
     image = models.ImageField('Картинка', upload_to='pokemon_images', null=True, blank=True)
     description = models.TextField(blank=True)
+    previous_evolution = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='next_evolutions',
+        on_delete=models.SET_NULL
+    )
 
     def __str__(self):
         return f'{self.title}'
