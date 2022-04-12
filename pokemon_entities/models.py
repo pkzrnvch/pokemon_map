@@ -3,6 +3,12 @@ from django.db import models  # noqa F401
 
 class PokemonElementType(models.Model):
     title = models.CharField('Стихия', max_length=200)
+    image = models.ImageField(
+        'Картинка',
+        upload_to='pokemon_images',
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return f'{self.title}'
@@ -13,7 +19,12 @@ class Pokemon(models.Model):
     title = models.CharField('Название', max_length=200)
     title_en = models.CharField('Название(англ.)', blank=True, max_length=200)
     title_jp = models.CharField('Название(яп.)', blank=True, max_length=200)
-    image = models.ImageField('Картинка', upload_to='pokemon_images', null=True, blank=True)
+    image = models.ImageField(
+        'Картинка',
+        upload_to='pokemon_images',
+        null=True,
+        blank=True
+    )
     element_type = models.ManyToManyField(
         PokemonElementType,
         verbose_name='Стихия',
