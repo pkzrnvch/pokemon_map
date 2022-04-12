@@ -13,7 +13,7 @@ DEFAULT_IMAGE_URL = (
 )
 
 
-def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
+def add_pokemon(folium_map, lat, lon, pokemon_stats, image_url=DEFAULT_IMAGE_URL):
     icon = folium.features.CustomIcon(
         image_url,
         icon_size=(50, 50),
@@ -23,17 +23,25 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
         # Warning! `tooltip` attribute is disabled intentionally
         # to fix strange folium cyrillic encoding bug
         icon=icon,
+        popup=folium.Popup(pokemon_stats)
     ).add_to(folium_map)
 
 
 def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in PokemonEntity.objects.all():
+        pokemon_entity_stats = f'''Название: {pokemon_entity.pokemon.title}
+        Уровень: {pokemon_entity.level}
+        Здоровье: {pokemon_entity.health}
+        Сила: {pokemon_entity.strength}
+        Защита: {pokemon_entity.defence}
+        Выносливость: {pokemon_entity.stamina}'''
         add_pokemon(
             folium_map,
             pokemon_entity.lat,
             pokemon_entity.lon,
-            request.build_absolute_uri(pokemon_entity.pokemon.image.url)
+            pokemon_entity_stats,
+            request.build_absolute_uri(pokemon_entity.pokemon.image.url),
         )
 
     pokemons_on_page = []
@@ -67,6 +75,7 @@ def show_pokemon(request, pokemon_id):
         'description': requested_pokemon.description,
         'title_en': requested_pokemon.title_en,
         'title_jp': requested_pokemon.title_jp,
+        'element_type': requested_pokemon.element_type.all(),
         'img_url': request.build_absolute_uri(requested_pokemon.image.url),
     }
     if requested_pokemon.previous_evolution:
@@ -89,10 +98,17 @@ def show_pokemon(request, pokemon_id):
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in PokemonEntity.objects.filter(pokemon=requested_pokemon):
+        pokemon_entity_stats = f'''Название: {pokemon_entity.pokemon.title}
+        Уровень: {pokemon_entity.level}
+        Здоровье: {pokemon_entity.health}
+        Сила: {pokemon_entity.strength}
+        Защита: {pokemon_entity.defence}
+        Выносливость: {pokemon_entity.stamina}'''
         add_pokemon(
             folium_map,
             pokemon_entity.lat,
             pokemon_entity.lon,
+            pokemon_entity_stats,
             request.build_absolute_uri(requested_pokemon.image.url)
         )
 
