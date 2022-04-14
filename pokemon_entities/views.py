@@ -70,7 +70,7 @@ def show_pokemon(request, pokemon_id):
     except Pokemon.DoesNotExist:
         return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
-    pokemon = {
+    serialized_pokemon = {
         'title_ru': requested_pokemon.title,
         'description': requested_pokemon.description,
         'title_en': requested_pokemon.title_en,
@@ -80,7 +80,7 @@ def show_pokemon(request, pokemon_id):
     }
 
     if requested_pokemon.previous_evolution:
-        pokemon['previous_evolution'] = {
+        serialized_pokemon['previous_evolution'] = {
             'title_ru': requested_pokemon.previous_evolution.title,
             'pokemon_id': requested_pokemon.previous_evolution.id,
             'img_url': request.build_absolute_uri(
@@ -90,7 +90,7 @@ def show_pokemon(request, pokemon_id):
 
     next_evolution_pokemon = requested_pokemon.next_evolutions.first()
     if next_evolution_pokemon:
-        pokemon['next_evolution'] = {
+        serialized_pokemon['next_evolution'] = {
             'title_ru': next_evolution_pokemon.title,
             'pokemon_id': next_evolution_pokemon.id,
             'img_url': request.build_absolute_uri(
@@ -100,15 +100,19 @@ def show_pokemon(request, pokemon_id):
 
     element_types = []
     for element_type in requested_pokemon.element_type.all():
+        strong_against_elements = \
+            [element for element in element_type.pokemonelementtype_set.all()]
         element_types.append({
             'title': element_type.title,
-            'image': request.build_absolute_uri(element_type.image.url)
+            'img': request.build_absolute_uri(element_type.image.url),
+            'strong_against': strong_against_elements
         })
+
     if element_types:
-        pokemon['element_type'] = element_types
+        serialized_pokemon['element_type'] = element_types
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    for pokemon_entity in PokemonEntity.objects.filter(pokemon=requested_pokemon):
+    for pokemon_entity in requested_pokemon.pokemonentity_set.all():
         pokemon_entity_stats = f'''Название: {pokemon_entity.pokemon.title}
         Уровень: {pokemon_entity.level}
         Здоровье: {pokemon_entity.health}
@@ -124,5 +128,5 @@ def show_pokemon(request, pokemon_id):
         )
 
     return render(request, 'pokemon.html', context={
-        'map': folium_map._repr_html_(), 'pokemon': pokemon
+        'map': folium_map._repr_html_(), 'pokemon': serialized_pokemon
     })

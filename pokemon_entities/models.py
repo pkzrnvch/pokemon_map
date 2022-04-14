@@ -9,9 +9,15 @@ class PokemonElementType(models.Model):
         null=True,
         blank=True
     )
+    strong_against = models.ManyToManyField(
+        'self',
+        verbose_name='Силен против',
+        blank=True,
+        symmetrical=False
+    )
 
     def __str__(self):
-        return f'{self.title}'
+        return self.title
 
 
 class Pokemon(models.Model):
@@ -41,7 +47,7 @@ class Pokemon(models.Model):
     )
 
     def __str__(self):
-        return f'{self.title}'
+        return self.title
 
 
 class PokemonEntity(models.Model):

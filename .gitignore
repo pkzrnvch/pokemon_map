@@ -91,3 +91,6 @@ media/
 
 #PyCharm
 .idea/
+
+#Project
+pokemons.json
