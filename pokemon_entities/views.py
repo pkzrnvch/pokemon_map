@@ -1,9 +1,10 @@
-import folium
+from textwrap import dedent
 
+import folium
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
-from pokemon_entities.models import Pokemon, PokemonEntity
 
+from pokemon_entities.models import Pokemon, PokemonEntity
 
 MOSCOW_CENTER = [55.751244, 37.618423]
 DEFAULT_IMAGE_URL = (
@@ -30,12 +31,16 @@ def add_pokemon(folium_map, lat, lon, pokemon_stats, image_url=DEFAULT_IMAGE_URL
 def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in PokemonEntity.objects.all():
-        pokemon_entity_stats = f'''Название: {pokemon_entity.pokemon.title}
-        Уровень: {pokemon_entity.level}
-        Здоровье: {pokemon_entity.health}
-        Сила: {pokemon_entity.strength}
-        Защита: {pokemon_entity.defence}
-        Выносливость: {pokemon_entity.stamina}'''
+        pokemon_entity_stats = dedent(
+            f'''\
+            Название: {pokemon_entity.pokemon.title}
+            Уровень: {pokemon_entity.level}
+            Здоровье: {pokemon_entity.health}
+            Сила: {pokemon_entity.strength}
+            Защита: {pokemon_entity.defence}
+            Выносливость: {pokemon_entity.stamina}
+            '''
+        )
         add_pokemon(
             folium_map,
             pokemon_entity.lat,
@@ -113,12 +118,16 @@ def show_pokemon(request, pokemon_id):
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in requested_pokemon.pokemonentity_set.all():
-        pokemon_entity_stats = f'''Название: {pokemon_entity.pokemon.title}
-        Уровень: {pokemon_entity.level}
-        Здоровье: {pokemon_entity.health}
-        Сила: {pokemon_entity.strength}
-        Защита: {pokemon_entity.defence}
-        Выносливость: {pokemon_entity.stamina}'''
+        pokemon_entity_stats = dedent(
+            f'''\
+            Название: {pokemon_entity.pokemon.title}
+            Уровень: {pokemon_entity.level}
+            Здоровье: {pokemon_entity.health}
+            Сила: {pokemon_entity.strength}
+            Защита: {pokemon_entity.defence}
+            Выносливость: {pokemon_entity.stamina}
+            '''
+        )
         add_pokemon(
             folium_map,
             pokemon_entity.lat,

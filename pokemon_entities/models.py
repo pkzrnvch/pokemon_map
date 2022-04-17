@@ -27,9 +27,7 @@ class Pokemon(models.Model):
     title_jp = models.CharField('Название(яп.)', blank=True, max_length=200)
     image = models.ImageField(
         'Картинка',
-        upload_to='pokemon_images',
-        null=True,
-        blank=True
+        upload_to='pokemon_images'
     )
     element_type = models.ManyToManyField(
         PokemonElementType,
