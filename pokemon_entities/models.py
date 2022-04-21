@@ -52,6 +52,7 @@ class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(
         Pokemon,
         verbose_name='Покемон',
+        related_name='entities',
         on_delete=models.CASCADE
     )
     lat = models.FloatField('Широта',)

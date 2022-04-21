@@ -117,7 +117,7 @@ def show_pokemon(request, pokemon_id):
         serialized_pokemon['element_type'] = element_types
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    for pokemon_entity in requested_pokemon.pokemonentity_set.all():
+    for pokemon_entity in requested_pokemon.entities.all():
         pokemon_entity_stats = dedent(
             f'''\
             Название: {pokemon_entity.pokemon.title}
